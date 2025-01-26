@@ -17,7 +17,7 @@ export default function Scenario() {
   return (
     <main className="container mx-auto px-4 py-8">
       <Timer />
-      <h1 className="text-4xl font-bold text-center my-10">
+      <h1 className="text-4xl font-bold text-center my-10 text-black">
         Lafarge Innovation Challenge - Scenario {scenarioId}
       </h1>
       <Card className="max-w-4xl mx-auto border-[#00A651]">

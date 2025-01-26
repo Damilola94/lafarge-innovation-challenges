@@ -246,8 +246,10 @@ export function Challenge() {
                         <span className="text-black font-bold">
                           {key.split(":")[0]}
                         </span>
-                        {key.includes(":") &&
-                          `:${key.split(":").slice(1).join(":")}`}
+                        <span className="text-black">
+                          {key.includes(":") &&
+                            `:${key.split(":").slice(1).join(":")}`}
+                        </span>
                       </span>
                     </label>
                   </div>

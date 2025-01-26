@@ -28,7 +28,7 @@ export function Timer() {
             />
           </svg>
         </div>
-        <div className="font-mono font-bold text-xl">
+        <div className="text-black font-mono font-bold text-xl">
           {String(minutes).padStart(2, "0")} MIN{" "}
           {String(seconds).padStart(2, "0")} SEC
         </div>
