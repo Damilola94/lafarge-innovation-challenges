@@ -176,7 +176,7 @@ export function Challenge() {
                   Dynamic Scenario 5: Extreme Climate Durability
                   </span>
                 </div>
-                <h1 className="text-3xl font-bold mt-2">
+                <h1 className="text-3xl text-black font-bold mt-2">
                 Develop a durable cement solution for extreme climate conditions while minimizing 
                 environmental impact.
                 </h1>
