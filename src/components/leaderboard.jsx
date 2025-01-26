@@ -1,4 +1,11 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const leaderboardData = [
   {
@@ -29,8 +36,7 @@ const leaderboardData = [
     scenarios: "5/5",
     badge: "Sustainability Champion",
   },
-
-]
+];
 
 export function Leaderboard() {
   return (
@@ -46,7 +52,7 @@ export function Leaderboard() {
             <TableHead>BADGE EARNED</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody >
+        <TableBody>
           {leaderboardData.map((entry) => (
             <TableRow key={entry.position}>
               <TableCell>{entry.position}</TableCell>
@@ -59,6 +65,5 @@ export function Leaderboard() {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
-

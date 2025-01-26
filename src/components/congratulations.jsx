@@ -17,11 +17,11 @@ export function Congratulations({ points = 1226, correct = 4, total = 5 }) {
         </div>
       </div>
 
-      <Link href="/leaderboard">
+      {/* <Link href="/leaderboard">
         <Button variant="outline" className="mt-4 text-green-400">
           View Leaderboard
         </Button>
-      </Link>
+      </Link> */}
     </div>
   );
 }
