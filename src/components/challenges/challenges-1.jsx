@@ -56,7 +56,6 @@ export function Challenge() {
     limestone: 5,
     gypsum: 50,
   };
-  const CLINKER_CO2_PER_PERCENT = 10;
   const MAX_BUDGET = 45;
   const MAX_CO2 = 550;
 
@@ -66,17 +65,15 @@ export function Challenge() {
 
   const calculateMetrics = () => {
     let newBudget = 0;
-
-    let newCO2 = 325;
+    let newCO2 = (values.clinker / 100) * 500;
 
     if (values.clinker > prevClinkerValue) {
-      newCO2 += 10;
+      newCO2 += 1;
     } else if (values.clinker < prevClinkerValue) {
-      newCO2 -= 10;
+      newCO2 -= 1;
     }
-    setPrevClinkerValue(values.clinker);
 
-    newCO2 += values.clinker * CLINKER_CO2_PER_PERCENT;
+    setPrevClinkerValue(values.clinker);
 
     newBudget += (values.clinker / 100) * UNIT_PRICES.clinker;
     newBudget += (values.limestone / 100) * UNIT_PRICES.limestone;
@@ -91,11 +88,11 @@ export function Challenge() {
     const exceededBudget = newBudget > MAX_BUDGET;
     const exceededCO2 = newCO2 > MAX_CO2;
 
-    if (exceededBudget) {
+    if (exceededBudget || exceededCO2) {
       setAlertMessage(
         `Warning: You are exceeding the recommended limits.\n${
           exceededBudget
-            ? `Budget: $${newBudget.toFixed(2)} > $${MAX_BUDGET}\n,`
+            ? `Budget: $${newBudget.toFixed(2)} > $${MAX_BUDGET}\n`
             : ""
         }${exceededCO2 ? `CO2: ${newCO2.toFixed(0)}kg > ${MAX_CO2}kg.` : ""}`
       );
@@ -301,14 +298,14 @@ export function Challenge() {
               Input Metrics
             </h3>
             <div className="space-x-6 flex justify-between items-center">
-              <div className="border-r pr-14">
+              <div className="border-r pr-20">
                 <h4 className="text-xs text-black font-bold mb-2">Budget</h4>
                 <p
                   className={`text-lg font-bold ${
                     metrics.budget > MAX_BUDGET ? "text-red-600" : "text-black"
                   }`}
                 >
-                  ${metrics.budget.toFixed(2)}/ton
+                  ${metrics.budget.toFixed(2)}
                 </p>
               </div>
               <div>
@@ -322,7 +319,7 @@ export function Challenge() {
                       : "text-black"
                   }`}
                 >
-                  {Math.round(metrics.co2Emissions)}Kg
+                  {metrics.co2Emissions}Kg
                 </p>
               </div>
             </div>

@@ -60,9 +60,8 @@ export function Challenge() {
     limestone: 5,
     gypsum: 50,
   };
-  const CLINKER_CO2_PER_PERCENT = 10;
-  const MAX_BUDGET = 70;
-  const MAX_CO2 = 600;
+  const MAX_BUDGET = 45;
+  const MAX_CO2 = 550;
 
   useEffect(() => {
     calculateMetrics();
@@ -70,17 +69,15 @@ export function Challenge() {
 
   const calculateMetrics = () => {
     let newBudget = 0;
-
-    let newCO2 = 325;
+    let newCO2 = (values.clinker / 100) * 500;
 
     if (values.clinker > prevClinkerValue) {
-      newCO2 += 10;
+      newCO2 += 1;
     } else if (values.clinker < prevClinkerValue) {
-      newCO2 -= 10;
+      newCO2 -= 1;
     }
-    setPrevClinkerValue(values.clinker);
 
-    newCO2 += values.clinker * CLINKER_CO2_PER_PERCENT;
+    setPrevClinkerValue(values.clinker);
 
     newBudget += (values.clinker / 100) * UNIT_PRICES.clinker;
     newBudget += (values.limestone / 100) * UNIT_PRICES.limestone;
@@ -95,11 +92,11 @@ export function Challenge() {
     const exceededBudget = newBudget > MAX_BUDGET;
     const exceededCO2 = newCO2 > MAX_CO2;
 
-    if (exceededBudget) {
+    if (exceededBudget || exceededCO2) {
       setAlertMessage(
         `Warning: You are exceeding the recommended limits.\n${
           exceededBudget
-            ? `Budget: $${newBudget.toFixed(2)} > $${MAX_BUDGET}\n,`
+            ? `Budget: $${newBudget.toFixed(2)} > $${MAX_BUDGET}\n`
             : ""
         }${exceededCO2 ? `CO2: ${newCO2.toFixed(0)}kg > ${MAX_CO2}kg.` : ""}`
       );
@@ -180,9 +177,9 @@ export function Challenge() {
                     Dynamic Scenario 3: High-Strength Industrial Project
                   </span>
                 </div>
-                <h1 className="text-3xl font-bold mt-2">
-                  Develop a product that prioritize high strength for industrial
-                  applications while keeping CO₂ emissions under control.
+                <h1 className="text-3xl font-bold mt-2 text-black">
+                Develop a product that prioritize high strength for industrial
+                applications while keeping CO₂ emissions under control.
                 </h1>
               </div>
 
@@ -198,9 +195,9 @@ export function Challenge() {
                           height={30}
                           className="inline-block"
                         />
-                        <span>{key}</span>
+                        <span className="text-black">{key}</span>
                       </span>
-                      <span>{value}%</span>
+                      <span className="text-black">{value}%</span>
                     </div>
                     {key === "gypsum" ? (
                       <div className="bg-green-600 rounded h-2"></div>
@@ -228,7 +225,7 @@ export function Challenge() {
 
           <Card className="p-6 mt-4">
             <div>
-              <h3 className="font-bold mb-4">Innovation</h3>
+              <h3 className="font-bold mb-4 text-black">Innovation</h3>
               <div className="grid grid-cols-2 gap-4">
                 {Object.entries(innovations).map(([key, { selected }]) => (
                   <div key={key} className="flex items-center space-x-4">
@@ -247,9 +244,13 @@ export function Challenge() {
                     />
                     <label htmlFor={key} className="flex flex-col">
                       <span>
-                        <span className="font-bold">{key.split(":")[0]}</span>
-                        {key.includes(":") &&
-                          `:${key.split(":").slice(1).join(":")}`}
+                        <span className="text-black font-bold">
+                          {key.split(":")[0]}
+                        </span>
+                        <span className="text-black">
+                          {key.includes(":") &&
+                            `:${key.split(":").slice(1).join(":")}`}
+                        </span>
                       </span>
                     </label>
                   </div>
@@ -271,23 +272,25 @@ export function Challenge() {
 
         <div className="md:col-span-1">
           <Card className="p-6">
-            <h3 className="font-bold text-xl mb-4">Considerations</h3>
+            <h3 className="text-black font-bold text-xl mb-4">
+              Considerations
+            </h3>
             <div className="space-y-6">
               <div>
-                <h4 className="font-bold mb-2">Budget</h4>
+                <h4 className="font-bold mb-2 text-black">Budget</h4>
                 <p className="text-sm text-gray-600">≤ ${MAX_BUDGET}/ton</p>
               </div>
               <div>
-                <h4 className="font-bold mb-2">Constraints</h4>
+                <h4 className="font-bold mb-2 text-black">Constraints</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Clinker content: ≥ 50%</li>
-                  <li>• CO₂ emissions ≤ {MAX_CO2}kg/ton</li>
+                <li>• Clinker content: ≥ 50%</li>
+                <li>• CO₂ emissions ≤ {MAX_CO2}kg/ton</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-bold mb-2">Key Focus Areas</h4>
+                <h4 className="text-black font-bold mb-2">Key Focus Areas</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>● Strength</li>
+                <li>● Strength</li>
                   <li>● Cost Efficiency </li>
                   <li>● Sustainability</li>
                 </ul>
@@ -295,22 +298,24 @@ export function Challenge() {
             </div>
           </Card>
           <Card className="p-6 mt-4">
-            <h3 className="font-bold text-xl mb-4 border-b pb-3">
+            <h3 className="font-bold text-xl mb-4 border-b pb-3 text-black">
               Input Metrics
             </h3>
             <div className="space-x-6 flex justify-between items-center">
-              <div className="border-r pr-14">
-                <h4 className="text-xs font-bold mb-2">Budget</h4>
+              <div className="border-r pr-20">
+                <h4 className="text-xs text-black font-bold mb-2">Budget</h4>
                 <p
                   className={`text-lg font-bold ${
                     metrics.budget > MAX_BUDGET ? "text-red-600" : "text-black"
                   }`}
                 >
-                  ${metrics.budget.toFixed(2)}/ton
+                  ${metrics.budget.toFixed(2)}
                 </p>
               </div>
               <div>
-                <h4 className="text-xs font-bold mb-2">CO₂ Emissions</h4>
+                <h4 className="text-xs text-black font-bold mb-2">
+                  CO₂ Emissions
+                </h4>
                 <p
                   className={`text-lg font-bold ${
                     metrics.co2Emissions > MAX_CO2
@@ -318,7 +323,7 @@ export function Challenge() {
                       : "text-black"
                   }`}
                 >
-                  {Math.round(metrics.co2Emissions)}Kg
+                  {metrics.co2Emissions}Kg
                 </p>
               </div>
             </div>
@@ -354,10 +359,10 @@ export function Challenge() {
         {showAlert && (
           <div className="fixed inset-0 flex items-start justify-center z-50 bg-black bg-opacity-50 white-space-pre-line">
             <Alert className="w-96 bg-white mt-10">
-              <AlertTitle className="text-lg font-bold mb-5">
+              <AlertTitle className="text-lg font-bold text-black mb-5">
                 Warning
               </AlertTitle>
-              <AlertDescription className="white-space-pre-line">
+              <AlertDescription className="white-space-pre-line text-black">
                 {alertMessage ||
                   "You are going below the recommended threshold."}
                 Would you like to continue?
@@ -375,10 +380,10 @@ export function Challenge() {
         {showExceedAlert && (
           <div className="fixed inset-0 flex items-start justify-center z-50 bg-black bg-opacity-50 white-space-pre-line">
             <Alert className="w-96 bg-white mt-10">
-              <AlertTitle className="text-lg font-bold mb-5">
+              <AlertTitle className="text-lg font-bold text-black mb-5">
                 Warning
               </AlertTitle>
-              <AlertDescription className="white-space-pre-line">
+              <AlertDescription className="white-space-pre-line text-black">
                 {"You are going below the recommended threshold."}
                 Would you like to continue?
                 <Button
