@@ -60,7 +60,7 @@ export function Challenge() {
     limestone: 5,
     gypsum: 50,
   };
-  const MAX_BUDGET = 45;
+  const MAX_BUDGET = 40;
   const MAX_CO2 = 550;
 
   useEffect(() => {

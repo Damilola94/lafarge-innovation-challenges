@@ -30,7 +30,10 @@ export function Challenge() {
     co2Emissions: 325,
   });
   const [innovations, setInnovations] = useState({
-    "Eco-Boost: Reduces CO₂ emissions by 5% (+$3/ton)": { selected: false, points: 3 },
+    "Eco-Boost: Reduces CO₂ emissions by 5% (+$3/ton)": {
+      selected: false,
+      points: 3,
+    },
     "Durability Surge: Adds crack resistance (+$6/ton))": {
       selected: false,
       points: 6,
@@ -56,8 +59,8 @@ export function Challenge() {
     limestone: 5,
     gypsum: 50,
   };
-  const MAX_BUDGET = 45;
-  const MAX_CO2 = 550;
+  const MAX_BUDGET = 47;
+  const MAX_CO2 = 350;
 
   useEffect(() => {
     calculateMetrics();
@@ -82,6 +85,13 @@ export function Challenge() {
     Object.entries(innovations).forEach(([key, { selected, points }]) => {
       if (selected) {
         newBudget += points;
+      }
+      if (
+        key.includes(
+          "Green Blend: Promotes eco-friendly CDM or Calcined Clay d(+$4/ton)"
+        ) 
+      ) {
+        newCO2 -= 10;
       }
     });
 
@@ -170,12 +180,12 @@ export function Challenge() {
               <div>
                 <div className="p-1 px-2 rounded-2xl w-fit bg-[#7D7CD61A]">
                   <span className="text-xs text-[#7D7CD6]">
-                  Dynamic Scenario 2: Green Urban Development
+                    Dynamic Scenario 2: Green Urban Development
                   </span>
                 </div>
                 <h1 className="text-3xl font-bold mt-2 text-black">
-                Develop a sustainable solution for urban housing with a strong
-                focus on reducing CO₂ emissions and eco-friendly materials.
+                  Develop a sustainable solution for urban housing with a strong
+                  focus on reducing CO₂ emissions and eco-friendly materials.
                 </h1>
               </div>
 
@@ -279,13 +289,13 @@ export function Challenge() {
               <div>
                 <h4 className="font-bold mb-2 text-black">Constraints</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                <li>• CO₂ emissions ≤ {MAX_CO2}kg/ton</li>
+                  <li>• CO₂ emissions ≤ {MAX_CO2}kg/ton</li>
                 </ul>
               </div>
               <div>
                 <h4 className="text-black font-bold mb-2">Key Focus Areas</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                <li>● Sustainability</li>
+                  <li>● Sustainability</li>
                   <li>● Innovation </li>
                   <li>● Cost Efficiency</li>
                 </ul>
