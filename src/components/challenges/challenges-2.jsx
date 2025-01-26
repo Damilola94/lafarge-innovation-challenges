@@ -30,7 +30,10 @@ export function Challenge() {
     co2Emissions: 325,
   });
   const [innovations, setInnovations] = useState({
-    "Eco-Boost: Reduces CO₂ emissions by 5% (+$3/ton)": { selected: false, points: 3 },
+    "Eco-Boost: Reduces CO₂ emissions by 5% (+$3/ton)": {
+      selected: false,
+      points: 3,
+    },
     "Durability Surge: Adds crack resistance (+$6/ton))": {
       selected: false,
       points: 6,
@@ -163,8 +166,6 @@ export function Challenge() {
     setShowAlert(false);
   };
 
-  console.log(showAlert, "showAlert");
-
   return (
     <>
       <Timer />
@@ -278,16 +279,15 @@ export function Challenge() {
               <div>
                 <h4 className="font-bold mb-2">Constraints</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Include waterproofing</li>
                   <li>• CO₂ emissions ≤ {MAX_CO2}kg/ton</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-bold mb-2">Key Focus Areas</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>● Durability</li>
-                  <li>● Cost Efficiency </li>
                   <li>● Sustainability</li>
+                  <li>● Innovation </li>
+                  <li>● Cost Efficiency</li>
                 </ul>
               </div>
             </div>

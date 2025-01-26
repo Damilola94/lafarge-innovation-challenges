@@ -163,8 +163,6 @@ export function Challenge() {
     setShowAlert(false);
   };
 
-  console.log(showAlert, "showAlert");
-
   return (
     <>
       <Timer />

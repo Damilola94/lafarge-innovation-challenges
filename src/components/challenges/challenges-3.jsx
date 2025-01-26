@@ -53,6 +53,7 @@ export function Challenge() {
     limestone: false,
   });
   const [prevClinkerValue, setPrevClinkerValue] = useState(65);
+  const [showExceedAlert, setShowExceedAlert] = useState(false);
 
   const UNIT_PRICES = {
     clinker: 50,
@@ -60,8 +61,8 @@ export function Challenge() {
     gypsum: 50,
   };
   const CLINKER_CO2_PER_PERCENT = 10;
-  const MAX_BUDGET = 45;
-  const MAX_CO2 = 550;
+  const MAX_BUDGET = 70;
+  const MAX_CO2 = 600;
 
   useEffect(() => {
     calculateMetrics();
@@ -141,7 +142,7 @@ export function Challenge() {
     const threshold = key === "clinker" ? 64 : 30;
 
     if (newValue < threshold) {
-      setShowAlert(true);
+      setShowExceedAlert(!showExceedAlert);
       setBelowThreshold((prev) => ({ ...prev, [key]: true }));
     } else if (newValue >= threshold && belowThreshold[key]) {
       setBelowThreshold((prev) => ({ ...prev, [key]: false }));
@@ -212,6 +213,11 @@ export function Challenge() {
                         max={key === "clinker" ? 96 : 96}
                         min={0}
                         step={1}
+                        className={
+                          belowThreshold[key]
+                            ? "bg-red-500 rounded"
+                            : "bg-green-600 rounded"
+                        }
                       />
                     )}
                   </div>
@@ -224,13 +230,19 @@ export function Challenge() {
             <div>
               <h3 className="font-bold mb-4">Innovation</h3>
               <div className="grid grid-cols-2 gap-4">
-                {Object.keys(innovations).map((item) => (
-                  <div key={item} className="flex items-center space-x-4">
+                {Object.entries(innovations).map(([key, { selected }]) => (
+                  <div key={key} className="flex items-center space-x-4">
                     <Checkbox
-                      id={item}
-                      checked={innovations[item]}
+                      id={key}
+                      checked={selected}
                       onCheckedChange={(checked) =>
-                        setInnovations((prev) => ({ ...prev, [item]: checked }))
+                        setInnovations((prev) => ({
+                          ...prev,
+                          [key]: {
+                            ...prev[key],
+                            selected: checked,
+                          },
+                        }))
                       }
                     />
                     <label htmlFor={key} className="flex flex-col">
@@ -268,14 +280,14 @@ export function Challenge() {
               <div>
                 <h4 className="font-bold mb-2">Constraints</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Include waterproofing</li>
+                  <li>• Clinker content: ≥ 50%</li>
                   <li>• CO₂ emissions ≤ {MAX_CO2}kg/ton</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-bold mb-2">Key Focus Areas</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>● Durability</li>
+                  <li>● Strength</li>
                   <li>● Cost Efficiency </li>
                   <li>● Sustainability</li>
                 </ul>
@@ -351,6 +363,28 @@ export function Challenge() {
                 Would you like to continue?
                 <Button
                   onClick={handleAlertConfirm}
+                  className="w-full bg-green-600 mt-5"
+                >
+                  OK
+                </Button>
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+
+        {showExceedAlert && (
+          <div className="fixed inset-0 flex items-start justify-center z-50 bg-black bg-opacity-50 white-space-pre-line">
+            <Alert className="w-96 bg-white mt-10">
+              <AlertTitle className="text-lg font-bold mb-5">
+                Warning
+              </AlertTitle>
+              <AlertDescription className="white-space-pre-line">
+                {"You are going below the recommended threshold."}
+                Would you like to continue?
+                <Button
+                  onClick={() => {
+                    setShowExceedAlert(!showExceedAlert);
+                  }}
                   className="w-full bg-green-600 mt-5"
                 >
                   OK
