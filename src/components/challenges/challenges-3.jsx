@@ -99,7 +99,7 @@ export function Challenge() {
       setAlertMessage(
         `Warning: You are exceeding the recommended limits.\n${
           exceededBudget
-            ? `Budget: $${newBudget.toFixed(2)} > $${MAX_BUDGET}\n`
+            ? `Budget: $${newBudget.toFixed(2)} > $${MAX_BUDGET}\n,`
             : ""
         }${exceededCO2 ? `CO2: ${newCO2.toFixed(0)}kg > ${MAX_CO2}kg.` : ""}`
       );
