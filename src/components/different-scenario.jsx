@@ -20,10 +20,10 @@ export default function ScenariosPage() {
           {scenarios.map((scenario) => (
             <Card key={scenario.id} className="flex flex-col">
               <CardHeader>
-                <CardTitle className="text-xl font-semibold">Scenario {scenario.id}</CardTitle>
+                <CardTitle className="text-xl font-semibold text-black">Scenario {scenario.id}</CardTitle>
               </CardHeader>
               <CardContent>
-                <h3 className="text-lg font-medium mb-2">{scenario.title}</h3>
+                <h3 className="text-lg font-medium mb-2 text-black">{scenario.title}</h3>
                 <p className="text-gray-600">{scenario.description}</p>
               </CardContent>
               <CardFooter className="mt-auto">

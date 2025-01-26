@@ -17,7 +17,7 @@ export function Layout({ children }) {
               priority
             />
           </Link>
-          <h1 className="max-w- text-base font-bold mt-2">
+          <h1 className="text-black text-base font-bold mt-2">
             Pushing Boundaries with Innovation & Excellence
           </h1>
         </div>
