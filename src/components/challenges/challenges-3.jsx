@@ -18,6 +18,9 @@ import {
 import { Timer } from "../ui/timer";
 import Image from "next/image";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+// import { useRouter } from "next";
+import { Loader } from "../ui/loader";
+import { useRouter } from "next/navigation";
 
 export function Challenge() {
   const [values, setValues] = useState({
@@ -164,6 +167,19 @@ export function Challenge() {
     setShowAlert(false);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    setIsModalOpen(false);
+
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+
+    setIsLoading(false);
+    router.push("/congratulations");
+  };
+
   return (
     <>
       <Timer />
@@ -171,7 +187,7 @@ export function Challenge() {
         <div className="w-full md:col-span-1">
           <Card className="p-6">
             <div className="w-full space-y-8">
-              <div>
+            <div>
                 <div className="p-1 px-2 rounded-2xl w-fit bg-[#7D7CD61A]">
                   <span className="text-xs text-[#7D7CD6]">
                     Dynamic Scenario 3: High-Strength Industrial Project
@@ -339,8 +355,13 @@ export function Challenge() {
               </DialogDescription>
             </DialogHeader>
             <div className="py-4">
-              <p className="text-lg font-semibold">
-                Total Points Generated: {totalPoints}
+              <p className="text-md">
+                <span className="font-bold">Estimated Budget:</span> $
+                {metrics.budget.toFixed(2)}/ton
+              </p>
+              <p className="text-md">
+                <span className="font-bold"> Estimated CO2 Emissions:</span>{" "}
+                {metrics.co2Emissions.toFixed(0)}Kg/ton
               </p>
             </div>
             <DialogFooter>
@@ -348,7 +369,10 @@ export function Challenge() {
                 Cancel
               </Button>
               <Link href="/congratulations">
-                <Button className="bg-green-600 hover:bg-green-700 text-white">
+                <Button
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                  onClick={handleSubmit}
+                >
                   Confirm Submission
                 </Button>
               </Link>
@@ -399,6 +423,7 @@ export function Challenge() {
           </div>
         )}
       </div>
+      {isLoading && <Loader />}
     </>
   );
 }
