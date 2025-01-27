@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { TimerProvider } from "@/contexts/TimerContext";
+import { Toaster } from "react-hot-toast"
 
 export function Layout({ children }) {
   const [isMacOrIOS, setIsMacOrIOS] = useState(false);
@@ -36,6 +37,7 @@ export function Layout({ children }) {
         </div>
       </header>
       <TimerProvider>
+      <Toaster position="top-center" />
         <main className="max-w-7xl mx-auto p-4">{children}</main>
       </TimerProvider>
     </div>
