@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import { useParams } from "next/navigation";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,8 @@ import {
 } from "@/components/ui/select";
 
 export function Challenge() {
+  const params = useParams();
+  const sessionId = parseInt(params.id);
   const [values, setValues] = useState({
     clinker: 65,
     limestone: 31,
@@ -57,7 +59,7 @@ export function Challenge() {
     },
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [totalPoints, setTotalPoints] = useState(0);
+  const [_, setTotalPoints] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [belowThreshold, setBelowThreshold] = useState({
@@ -68,12 +70,9 @@ export function Challenge() {
   const [showExceedAlert, setShowExceedAlert] = useState(false);
   const [teamName, setTeamName] = useState("red");
   const [teamNo, setTeamNo] = useState("2");
-  const [sessionId, setSessionId] = useState(989);
-  const [scenarioId, setScenarioId] = useState(2);
+  const [scenarioId] = useState(1);
   const [selectedTeam, setSelectedTeam] = useState("Select Team");
 
-  console.log("Man/....");
-  
   const UNIT_PRICES = {
     clinker: 50,
     limestone: 5,
@@ -265,7 +264,7 @@ export function Challenge() {
     <>
       <div className="flex justify-between items-center px-16">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push("/dashboard/1")}
           className="flex items-center space-x-2"
         >
           <ArrowLeft className="h-5 w-5 text-black" />
@@ -452,7 +451,7 @@ export function Challenge() {
             <div className="space-x-6 flex justify-between items-center mt-10">
               <div className="border-r pr-20">
                 <h4 className="text-xs text-black font-bold mb-2">Margin</h4>
-                <p className={`text-lg font-bold`}>
+                <p className="text-lg font-bold text-black">
                   {metrics.percentMargin.toFixed(0)}%
                 </p>
               </div>

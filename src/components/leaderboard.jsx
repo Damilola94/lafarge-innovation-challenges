@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -13,14 +14,15 @@ import {
 const BASE_URL = "https://lafarge-challenge.onrender.com";
 
 export function Leaderboard() {
+  const params = useParams();
+  const sessionId = parseInt(params.id);
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/v1/leaderboard/989`);
+        const response = await fetch(`${BASE_URL}/v1/leaderboard/${sessionId}`);
         const data = await response.json();
-
         const sortedLeaderboard = data.data.sort(
           (a, b) => parseInt(b.position) - parseInt(a.position)
         );
@@ -33,7 +35,20 @@ export function Leaderboard() {
     fetchLeaderboard();
   }, []);
 
-  console.log(leaderboard, "leaderboard");
+  const getOrdinalSuffix = (num) => {
+    if (num === 11 || num === 12 || num === 13) return `${num}th`;
+    const lastDigit = num % 10;
+    switch (lastDigit) {
+      case 1:
+        return `${num}st`;
+      case 2:
+        return `${num}nd`;
+      case 3:
+        return `${num}rd`;
+      default:
+        return `${num}th`;
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -49,19 +64,23 @@ export function Leaderboard() {
               CO2 EMISSIONS
             </TableHead>
             <TableHead className="text-black font-bold">COST</TableHead>
+            <TableHead className="text-black font-bold">TOTAL SCORE</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {leaderboard.map((entry, index) => (
             <TableRow key={index}>
               <TableCell className="text-black">
-                {`${entry.position}th` || `${index + 1}th`}
+                {getOrdinalSuffix(entry.position || index + 1)}
               </TableCell>
-              <TableCell className="text-black">{entry.teamName.toUpperCase()}</TableCell>
+              <TableCell className="text-black">
+                {entry.teamName.toUpperCase()}
+              </TableCell>
               <TableCell className="text-black">{entry.teamNo}</TableCell>
               <TableCell className="text-black">{entry.margin}</TableCell>
               <TableCell className="text-black">{entry.constraint}</TableCell>
               <TableCell className="text-black">{entry.cost}</TableCell>
+              <TableCell className="text-black">{entry.totalScore}</TableCell>
             </TableRow>
           ))}
         </TableBody>

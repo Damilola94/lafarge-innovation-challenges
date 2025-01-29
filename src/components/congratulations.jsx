@@ -8,7 +8,7 @@ export function Congratulations({ points = 1226, correct = 4, total = 5 }) {
 
       <div className="border-2 border-green-500 rounded-lg p-8 text-center shadow-2xl shadow-green-200 ">
         <div className="mt-4 text-gray-600">
-          You have submitted your solution, and admin is evaluating your score
+        You have submitted your solution, look to the leaderboard to see how you rank
         </div>
       </div>
 
