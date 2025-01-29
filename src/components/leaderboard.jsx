@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -7,59 +10,58 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const leaderboardData = [
-  {
-    position: "1st",
-    team: "Team EcoBuilders",
-    score: "90,100",
-    scenarios: "5/5",
-    badge: "Sustainability Champion",
-  },
-  {
-    position: "2nd",
-    team: "Team EcoBuilders",
-    score: "90,100",
-    scenarios: "5/5",
-    badge: "Sustainability Champion",
-  },
-  {
-    position: "3rd",
-    team: "Team EcoBuilders",
-    score: "90,100",
-    scenarios: "5/5",
-    badge: "Sustainability Champion",
-  },
-  {
-    position: "4th",
-    team: "Team EcoBuilders",
-    score: "90,100",
-    scenarios: "5/5",
-    badge: "Sustainability Champion",
-  },
-];
+const BASE_URL = "https://lafarge-challenge.onrender.com";
 
 export function Leaderboard() {
+  const [leaderboard, setLeaderboard] = useState([]);
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/v1/leaderboard/989`);
+        const data = await response.json();
+
+        const sortedLeaderboard = data.data.sort(
+          (a, b) => parseInt(b.position) - parseInt(a.position)
+        );
+        setLeaderboard(sortedLeaderboard);
+      } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
+
+  console.log(leaderboard, "leaderboard");
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-center text-black">Leaderboard</h1>
       <Table className="px-32">
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-24 text-black"></TableHead>
-            <TableHead className="text-black">TEAM NAME</TableHead>
-            <TableHead className="text-black">SCORE</TableHead>
-            <TableHead className="text-black">SCENARIOS SOLVED</TableHead>
-            <TableHead className="text-black">BADGE EARNED</TableHead>
+          <TableRow className="font-bold">
+            <TableHead className="w-24 text-black font-bold"></TableHead>
+            <TableHead className="text-black font-bold">TEAM NAME</TableHead>
+            <TableHead className="text-black font-bold">TEAM NO.</TableHead>
+            <TableHead className="text-black font-bold">MARGIN</TableHead>
+            <TableHead className="text-black font-bold">
+              CO2 EMISSIONS
+            </TableHead>
+            <TableHead className="text-black font-bold">COST</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {leaderboardData.map((entry) => (
-            <TableRow key={entry.position}>
-              <TableCell className="text-black">{entry.position}</TableCell>
-              <TableCell className="text-black">{entry.team}</TableCell>
-              <TableCell className="text-black">{entry.score}</TableCell>
-              <TableCell className="text-black">{entry.scenarios}</TableCell>
-              <TableCell className="text-black">{entry.badge}</TableCell>
+          {leaderboard.map((entry, index) => (
+            <TableRow key={index}>
+              <TableCell className="text-black">
+                {`${entry.position}th` || `${index + 1}th`}
+              </TableCell>
+              <TableCell className="text-black">{entry.teamName.toUpperCase()}</TableCell>
+              <TableCell className="text-black">{entry.teamNo}</TableCell>
+              <TableCell className="text-black">{entry.margin}</TableCell>
+              <TableCell className="text-black">{entry.constraint}</TableCell>
+              <TableCell className="text-black">{entry.cost}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -18,9 +18,15 @@ import {
 import { Timer } from "../ui/timer";
 import Image from "next/image";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-// import { useRouter } from "next";
 import { Loader } from "../ui/loader";
 import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function Challenge() {
   const [values, setValues] = useState({
@@ -31,14 +37,21 @@ export function Challenge() {
   const [metrics, setMetrics] = useState({
     budget: 36.05,
     co2Emissions: 325,
+    profit: 0,
+    percentMargin: 0,
   });
   const [innovations, setInnovations] = useState({
-    "Waterproofing: +$5/ton": { selected: false, points: 5 },
-    "Eco-Boost: Reduces CO₂ emissions by 5% (+$3/ton)": {
+    "Waterproofing Agent (+$5/ton): Enhances flood resistance by reducing water penetration.":
+      {
+        selected: false,
+        points: 5,
+      },
+    "Eco-Boost Admixture (+$3/ton): Cuts CO₂ emissions by 5%.": {
       selected: false,
+      ecoBoost: true,
       points: 3,
     },
-    "Durability Surge: Combines waterproofing and extra strength for $6/ton": {
+    "Durability Surge (+$6/ton): Combine waterproofing and extra strength": {
       selected: false,
       points: 6,
     },
@@ -53,6 +66,11 @@ export function Challenge() {
   });
   const [prevClinkerValue, setPrevClinkerValue] = useState(65);
   const [showExceedAlert, setShowExceedAlert] = useState(false);
+  const [teamName, setTeamName] = useState("red");
+  const [teamNo, setTeamNo] = useState("2");
+  const [sessionId, setSessionId] = useState(989);
+  const [scenarioId, setScenarioId] = useState(2);
+  const [selectedTeam, setSelectedTeam] = useState("Select Team");
 
   const UNIT_PRICES = {
     clinker: 50,
@@ -60,20 +78,18 @@ export function Challenge() {
     gypsum: 50,
   };
   const MAX_BUDGET = 45;
-  const MAX_CO2 = 550;
+  const MAX_CO2 = 400;
 
-  useEffect(() => {
-    calculateMetrics();
-  }, [values, innovations]);
-
-  const calculateMetrics = () => {
+  const calculateMetrics = useCallback(() => {
     let newBudget = 0;
     let newCO2 = (values.clinker / 100) * 500;
+    let basePrice = 50;
+    let innovationCost = 0;
 
     if (values.clinker > prevClinkerValue) {
-      newCO2 += 1;
+      newCO2 += 10;
     } else if (values.clinker < prevClinkerValue) {
-      newCO2 -= 1;
+      newCO2 -= 10;
     }
 
     setPrevClinkerValue(values.clinker);
@@ -85,8 +101,19 @@ export function Challenge() {
     Object.entries(innovations).forEach(([key, { selected, points }]) => {
       if (selected) {
         newBudget += points;
+        innovationCost += points;
+        basePrice += points * 2;
       }
     });
+
+    Object.entries(innovations).forEach(([key, { selected, ecoBoost }]) => {
+      if (selected && ecoBoost) {
+        newCO2 *= 0.95;
+      }
+    });
+
+    const profit = basePrice - newBudget;
+    const percentPofit = (profit / basePrice) * 100;
 
     const exceededBudget = newBudget > MAX_BUDGET;
     const exceededCO2 = newCO2 > MAX_CO2;
@@ -95,7 +122,7 @@ export function Challenge() {
       setAlertMessage(
         `Warning: You are exceeding the recommended limits.\n${
           exceededBudget
-            ? `Budget: $${newBudget.toFixed(2)} > $${MAX_BUDGET}\n`
+            ? `Budget: $${newBudget.toFixed(2)} > $${MAX_BUDGET}.\n`
             : ""
         }${exceededCO2 ? `CO2: ${newCO2.toFixed(0)}kg > ${MAX_CO2}kg.` : ""}`
       );
@@ -107,8 +134,20 @@ export function Challenge() {
     setMetrics({
       budget: newBudget,
       co2Emissions: newCO2,
+      percentMargin: percentPofit,
+      profit: profit,
     });
-  };
+  }, [values, innovations, prevClinkerValue]);
+
+  useEffect(() => {
+    calculateMetrics();
+  }, [values, innovations, calculateMetrics]);
+
+  useEffect(() => {
+    const [name, number] = selectedTeam.split("-");
+    setTeamName(name.toLowerCase());
+    setTeamNo(number);
+  }, [selectedTeam]);
 
   const calculatePoints = () => {
     let points = 0;
@@ -128,9 +167,13 @@ export function Challenge() {
   };
 
   const handleNextClick = () => {
-    const points = calculatePoints();
-    setTotalPoints(points);
-    setIsModalOpen(true);
+    if (selectedTeam == "Select Team") {
+      alert("Please kindly select your team");
+    } else {
+      const points = calculatePoints();
+      setTotalPoints(points);
+      setIsModalOpen(true);
+    }
   };
 
   const handleSliderChange = (key, newValue) => {
@@ -163,22 +206,84 @@ export function Challenge() {
     setShowAlert(false);
   };
 
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = async () => {
-    setIsLoading(true)
-    setIsModalOpen(false)
+  const handleSubmit = useCallback(async () => {
+    setIsLoading(true);
+    setIsModalOpen(false);
+    try {
+      const payload = {
+        teamName,
+        teamNo,
+        cost: metrics.budget,
+        margin: metrics.profit,
+        constraint: metrics.co2Emissions,
+        innovations: {
+          hasDurabilitySurge:
+            innovations[
+              "Durability Surge (+$6/ton): Combine waterproofing and extra strength"
+            ].selected,
+          hasEcoBoost:
+            innovations[
+              "Eco-Boost Admixture (+$3/ton): Cuts CO₂ emissions by 5%."
+            ].selected,
+          hasWaterProofing:
+            innovations[
+              "Waterproofing Agent (+$5/ton): Enhances flood resistance by reducing water penetration."
+            ].selected,
+        },
+        sessionId,
+        scenarioId,
+      };
 
-    await new Promise((resolve) => setTimeout(resolve, 10000))
+      const response = await fetch(
+        "https://lafarge-challenge.onrender.com/v1/leaderboard/submission",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
-    setIsLoading(false)
-    router.push("/congratulations")
-  }
+      if (!response.ok) {
+        throw new Error("Submission failed");
+      }
+      router.push("/congratulations");
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [teamName, teamNo, metrics, innovations, sessionId, scenarioId, router]);
 
   return (
     <>
-      <Timer />
+      <div className="flex justify-between items-center px-16">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center space-x-2"
+        >
+          <ArrowLeft className="h-5 w-5 text-black" />
+          <span className="text-black font-semibold">Back</span>
+        </button>
+        <Select value={selectedTeam} onValueChange={setSelectedTeam}>
+          <SelectTrigger className="max-w-xs">
+            <SelectValue placeholder="Select your team" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Select Team"> Select Team</SelectItem>
+            <SelectItem value="RED-1">RED-1</SelectItem>
+            <SelectItem value="BLUE-2">BLUE-2</SelectItem>
+            <SelectItem value="GREEN-3">GREEN-3</SelectItem>
+            <SelectItem value="ORANGE-4">ORANGE-4</SelectItem>
+            <SelectItem value="PURPLE-5">PURPLE-5</SelectItem>
+          </SelectContent>
+        </Select>
+        <Timer />
+      </div>
       <div className="w-full grid md:grid-cols-[0.7fr_0.3fr] gap-8 p-16">
         <div className="w-full md:col-span-1">
           <Card className="p-6">
@@ -186,12 +291,15 @@ export function Challenge() {
               <div>
                 <div className="p-1 px-2 rounded-2xl w-fit bg-[#7D7CD61A]">
                   <span className="text-xs text-[#7D7CD6]">
-                    Dynamic Scenario 1: Flood-Resilient Housing
+                    The Challenge: Flood-Resilient Housing
                   </span>
                 </div>
-                <h1 className="text-3xl font-bold mt-2 text-black">
-                  Design a cement solution for flood-prone regions requiring
-                  waterproofing
+                <h1 className="text-xl font-bold mt-2 text-black">
+                  As part of its innovation drive, Square Cement is tasked with
+                  developing a new solution for flood-prone regions. Your team
+                  has been assigned to design a cost-effective, sustainable, and
+                  durable cement mix to withstand extreme weather conditions
+                  while ensuring affordability and environmental responsibility.
                 </h1>
               </div>
 
@@ -302,9 +410,9 @@ export function Challenge() {
               <div>
                 <h4 className="text-black font-bold mb-2">Key Focus Areas</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>● Durability</li>
-                  <li>● Cost Efficiency </li>
-                  <li>● Sustainability</li>
+                  <li>● Water Proofing</li>
+                  <li>● Budget Compliance </li>
+                  <li>● Margin Maximization</li>
                 </ul>
               </div>
             </div>
@@ -335,7 +443,15 @@ export function Challenge() {
                       : "text-black"
                   }`}
                 >
-                  {metrics.co2Emissions}Kg
+                  {metrics.co2Emissions.toFixed(0)}Kg
+                </p>
+              </div>
+            </div>
+            <div className="space-x-6 flex justify-between items-center mt-10">
+              <div className="border-r pr-20">
+                <h4 className="text-xs text-black font-bold mb-2">Margin</h4>
+                <p className={`text-lg font-bold`}>
+                  {metrics.percentMargin.toFixed(0)}%
                 </p>
               </div>
             </div>
@@ -352,21 +468,28 @@ export function Challenge() {
             </DialogHeader>
             <div className="py-4">
               <p className="text-md">
-                <span className="font-bold">Estimated Budget:</span> ${metrics.budget.toFixed(2)}/ton
+                <span className="font-bold">Estimated Budget:</span> $
+                {metrics.budget.toFixed(2)}/ton
               </p>
               <p className="text-md">
-              <span className="font-bold"> Estimated CO2 Emissions:</span> {metrics.co2Emissions.toFixed(0)}Kg/ton
+                <span className="font-bold"> Estimated CO2 Emissions:</span>{" "}
+                {metrics.co2Emissions.toFixed(0)}Kg/ton
+              </p>
+              <p className="text-md">
+                <span className="font-bold"> Generated Margin:</span>{" "}
+                {metrics.percentMargin.toFixed(0)}%
               </p>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsModalOpen(false)}>
                 Cancel
               </Button>
-              <Link href="/congratulations">
-                <Button className="bg-green-600 hover:bg-green-700 text-white"onClick={handleSubmit}>
-                  Confirm Submission
-                </Button>
-              </Link>
+              <Button
+                className="bg-green-600 hover:bg-green-700 text-white"
+                onClick={handleSubmit}
+              >
+                Confirm Submission
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

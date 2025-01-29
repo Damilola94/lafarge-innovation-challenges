@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { UserInitials } from "./UserInitials";
 import { QuizQuestions } from "./QuizQuestions";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { questions } from "@/lib/quiz-data";
 import { Loader } from "@/components/ui/loader";

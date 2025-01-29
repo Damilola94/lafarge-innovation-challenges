@@ -18,32 +18,99 @@ export default function Scenario() {
     <main className="container mx-auto px-4 py-8">
       <Timer />
       <h1 className="text-4xl font-bold text-center my-10 text-black">
-        Lafarge Innovation Challenge - Scenario {scenarioId}
+        Lafarge Innovation Challenge
       </h1>
       <Card className="max-w-4xl mx-auto border-[#00A651]">
         <CardContent className="p-8">
           <div className="space-y-6">
             <div className="space-y-4">
-              <p className="text-gray-600 font-bold">Scenario Overview</p>
+              <p className="text-gray-600 font-bold">Background</p>
               <p className="text-gray-700 text-justify mb-4">
-                {scenario.overview}
+                {scenario.background}
               </p>
-              <p className="text-gray-600 font-bold">Objective</p>
+              <br />
+
+              <p className="text-gray-600 font-bold">Strategic Objectives</p>
               <p className="text-gray-700 text-justify mb-3">
                 {scenario.objective}
               </p>
-              <p className="text-gray-600 font-bold">Key Constraints</p>
-              <p className="text-gray-700 text-justify mb-3">
-                {scenario.keyConstraints}
+              <ul className="text-gray-700 text-justify mb-3">
+                <li>
+                  ● Be the Lowest-Cost Producer – Optimize material sourcing,
+                  manufacturing efficiency, and supply chain processes to
+                  deliver high-quality solutions at the most competitive cost.
+                </li>
+                <br />
+                <li>
+                  ● Leader in Sustainability & Decarbonization – Develop
+                  low-carbon solutions and circular economy initiatives to
+                  significantly reduce CO₂ emissions.
+                </li>
+                <br />
+                <li>
+                  ● Achieve Accelerated Growth & Profitability Through
+                  Innovation – Leverage cutting-edge materials and digital
+                  transformation to introduce innovative solutions for modern
+                  construction needs.
+                </li>
+              </ul>
+              <br />
+
+              <p className="text-gray-600 font-bold">
+                The Challenge: Flood-Resilient Housing
               </p>
-              <p className="text-gray-600 font-bold">Key Focus Areas</p>
+              <ul className="text-gray-700 text-justify mb-3">
+                <li>
+                  ● <span className="font-bold">Cost Efficiency:</span> The
+                  solution must not exceed $45 per ton.
+                </li>
+                <br />
+                <li>
+                  ● <span className="font-bold">Sustainability:</span> CO₂
+                  emissions must be ≤ 550kg per ton.
+                </li>
+                <br />
+
+                <li>
+                  ● <span className="font-bold">Structural Resilience:</span>{" "}
+                  The mix must provide high strength and waterproofing
+                  properties to resist flood damage.
+                </li>
+                <br />
+              </ul>
+
+              <br />
+
+              <p className="text-gray-600 font-bold">Innovation Elements</p>
               <p className="text-gray-700 text-justify mb-3">
-                {scenario.keyFocus}
+                {scenario.innovationElement}
               </p>
-              <p className="text-gray-600 font-bold">Call-to-Action</p>
+              <ul className="text-gray-700 text-justify mb-3">
+                <li>
+                  ●
+                  <span className="font-bold"> Waterproofing Agent (+$5/ton):
+                  </span> Enhances flood resistance by reducing water
+                </li>
+                <br />
+                <li>
+                  ● 
+                  <span className="font-bold"> Eco-Boost Admixture (+$3/ton):
+                  </span> Cuts CO₂ emissions by 5%.
+                </li>
+                <br />
+
+                <li>
+                  ● 
+                  <span className="font-bold"> Durability Surge (+$6/ton):</span> Combine waterproofing and extra strength.
+                </li>
+                <br />
+              </ul>
+
+              <p className="text-gray-600 font-bold">Pricing</p>
               <p className="text-gray-700 text-justify mb-3">
-                {scenario.callToAction}
+                {scenario.pricing}
               </p>
+            <br/>
             </div>
             <div className="pt-4">
               <Link
