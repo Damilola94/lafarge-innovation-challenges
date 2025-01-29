@@ -72,7 +72,7 @@ export function Challenge() {
   const [scenarioId, setScenarioId] = useState(2);
   const [selectedTeam, setSelectedTeam] = useState("Select Team");
 
-  console.log("Man");
+  console.log("Man/....");
   
   const UNIT_PRICES = {
     clinker: 50,
