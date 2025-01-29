@@ -24,7 +24,7 @@ export function Leaderboard() {
         const response = await fetch(`${BASE_URL}/v1/leaderboard/${sessionId}`);
         const data = await response.json();
         const sortedLeaderboard = data.data.sort(
-          (a, b) => parseInt(b.position) - parseInt(a.position)
+          (a, b) => parseInt(a.position) - parseInt(b.position)
         );
         setLeaderboard(sortedLeaderboard);
       } catch (error) {
@@ -56,7 +56,7 @@ export function Leaderboard() {
       <Table className="px-32">
         <TableHeader>
           <TableRow className="font-bold">
-            <TableHead className="w-24 text-black font-bold"></TableHead>
+            <TableHead className="w-24 text-black font-bold">POSITION</TableHead>
             <TableHead className="text-black font-bold">TEAM NAME</TableHead>
             <TableHead className="text-black font-bold">TEAM NO.</TableHead>
             <TableHead className="text-black font-bold">MARGIN</TableHead>

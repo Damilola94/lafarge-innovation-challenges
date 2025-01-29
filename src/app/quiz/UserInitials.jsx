@@ -23,7 +23,7 @@ export function UserInitials({ onStart }) {
         onChange={(e) => setInitials(e.target.value)}
         placeholder="Your initials"
         maxLength={3}
-        className="mb-4"
+        className="mb-4 text-black"
         required
       />
       <Button type="submit" className="w-fit text-white bg-green-600 text-center mx-auto">

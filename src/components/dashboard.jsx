@@ -10,7 +10,7 @@ import { Timer } from "./ui/timer";
 
 export default function Scenario() {
   const params = useParams();
-  const scenarioId = parseInt(params.dashboard, 10);
+  const scenarioId = parseInt(params.dashboard);
 
   const scenario = mockData.find((item) => item.id === scenarioId);
 
@@ -26,13 +26,13 @@ export default function Scenario() {
             <div className="space-y-4">
               <p className="text-gray-600 font-bold">Background</p>
               <p className="text-gray-700 text-justify mb-4">
-                {scenario.background}
+                {mockData[0].background}
               </p>
               <br />
 
               <p className="text-gray-600 font-bold">Strategic Objectives</p>
               <p className="text-gray-700 text-justify mb-3">
-                {scenario.objective}
+                {mockData[0].objective}
               </p>
               <ul className="text-gray-700 text-justify mb-3">
                 <li>
@@ -83,38 +83,48 @@ export default function Scenario() {
 
               <p className="text-gray-600 font-bold">Innovation Elements</p>
               <p className="text-gray-700 text-justify mb-3">
-                {scenario.innovationElement}
+                {mockData[0].innovationElement}
               </p>
               <ul className="text-gray-700 text-justify mb-3">
                 <li>
                   ●
-                  <span className="font-bold"> Waterproofing Agent (+$5/ton):
-                  </span> Enhances flood resistance by reducing water
+                  <span className="font-bold">
+                    {" "}
+                    Waterproofing Agent (+$5/ton):
+                  </span>{" "}
+                  Enhances flood resistance by reducing water
                 </li>
                 <br />
                 <li>
-                  ● 
-                  <span className="font-bold"> Eco-Boost Admixture (+$3/ton):
-                  </span> Cuts CO₂ emissions by 5%.
+                  ●
+                  <span className="font-bold">
+                    {" "}
+                    Eco-Boost Admixture (+$3/ton):
+                  </span>{" "}
+                  Cuts CO₂ emissions by 5%.
                 </li>
                 <br />
 
                 <li>
-                  ● 
-                  <span className="font-bold"> Durability Surge (+$6/ton):</span> Combine waterproofing and extra strength.
+                  ●
+                  <span className="font-bold">
+                    {" "}
+                    Durability Surge (+$6/ton):
+                  </span>{" "}
+                  Combine waterproofing and extra strength.
                 </li>
                 <br />
               </ul>
 
               <p className="text-gray-600 font-bold">Pricing</p>
               <p className="text-gray-700 text-justify mb-3">
-                {scenario.pricing}
+                {mockData[0].pricing}
               </p>
-            <br/>
+              <br />
             </div>
             <div className="pt-4">
               <Link
-                href={`/challenges-${scenarioId}`}
+                href={`/challenges/${scenarioId}`}
                 passHref
                 className="w-full"
               >
